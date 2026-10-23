@@ -11,8 +11,8 @@ Measured on our four Sparks on 2026-10-23:
 | Six users | 84 tok/s total decode on short prompts (TTFT 1.2 s); six ~100K-token prompts sent at once all complete: first-token p50 221 s, last 379 s (prefill is shared, about 1,480 tok/s) |
 | Prefill | about 1,480 tok/s from 8K to 112K tokens: first token of a 97K prompt in 66 s |
 | DSpark | k = 3, 2.1 to 3.2 tokens per step (acceptance 0.36 on free-form prose up to 0.74 on code) |
-| 69-scenario tool eval | running now on this exact config; the score lands here when it finishes |
-| Checks | chat, tool call + tool-result round trip, image input, needle in a 25.8K-token prompt: all pass |
+| 69-scenario tool eval | **82.6** quality (54 pass, 6 partial, 9 fail out of 69), responsiveness 83.7, deployability 82.9 ([section](#69-scenario-tool-eval)) |
+| Checks | chat, tool call + tool-result round trip, image input, needle in a 25.8K-token prompt: all pass ([`results/smoke_gmu080.json`](results/smoke_gmu080.json)) |
 
 Full speed table: [C1 to C6 on four prompt sizes](#speed-c1-to-c6). Raw JSON: [`results/`](results/).
 
@@ -99,7 +99,7 @@ GB10 memory is shared by the GPU and Linux, so `--gpu-memory-utilization` is a f
 |---|---:|---:|---|---|
 | 0.85 | 1,683,660 | 5.61 | 0.1 to 1.6 GB | a worker node swapped and stopped answering ssh for about 50 minutes during FlashInfer autotune (no reboot); not usable |
 | 0.82 | 1,520,861 | 5.07 | 5.2 GB on rank 0, 6.7 to 6.9 GB on workers | served the smoke tests, then the guard on rank 0 fired at 3,071 MB during the first 8K prompt |
-| **0.80** | **1,415,656** | **4.72** | 7.7 GB on rank 0, 9.2 to 9.4 GB on workers | **stable**: all 84 speed-test requests (up to six 100K prompts at once) and the smoke tests ran with no guard trip; lowest MemAvailable seen 4.8 GB on rank 0, 6.6 to 7.0 GB on the workers |
+| **0.80** | **1,415,656** | **4.72** | 7.7 GB on rank 0, 9.2 to 9.4 GB on workers | **stable**: the smoke tests, all 84 speed-test requests (up to six 100K prompts at once) and the 69-scenario eval ran with no guard trip; lowest MemAvailable seen 4.8 GB on rank 0, 6.6 to 7.0 GB on the workers |
 
 Rank 0 always has about 2 GB less than the workers: it also runs the API server and the engine core. Keep the guard running whatever value you pick.
 
@@ -140,6 +140,32 @@ How to read it:
 - **total tok/s** = (prompt + output tokens) / wall time of the cell.
 - **DSpark acceptance** = accepted / drafted tokens over the cell, from vLLM's `/metrics`. **tokens per step** = 1 + accepted per draft (k = 3, so at most 4). Free-form prose at temperature 1.0 accepts the fewest drafts (0.36 to 0.43); explaining code accepts 0.58 to 0.74. That is why one user decodes 22 tok/s on the short prompt but 31 to 33 tok/s with a 32K or 100K prompt in context.
 - Lowest MemAvailable seen during the whole sweep (10-second samples): 4.8 GB on rank 0, 6.6 to 7.0 GB on the workers. The 3 GB guard never fired.
+
+## 69-scenario tool eval
+
+Our 69-scenario tool-calling eval (multi-turn tool loops with mock tool results, Pass/Partial/Fail = 2/1/0) against this server: temperature 0, max 8,192 tokens per turn, the chat template's default adaptive thinking, tools through `--tool-call-parser minimax_m3`. Scorecard: [`results/eval69/`](results/eval69/).
+
+| | |
+|---|---|
+| Quality | **82.6** / 100 (114 of 138 points) |
+| Result | 54 pass, 6 partial, 9 fail |
+| Responsiveness | 83.7 (median turn latency 3.7 s) |
+| Deployability | 82.9 (0.7 x quality + 0.3 x responsiveness) |
+| Tokens | 147,894 for the whole run |
+
+| category | pass / partial / fail | quality |
+|---|---|---:|
+| Context Retention, Contradictory Parameters, Error Recovery, Multi-Step Chains, Parameter Precision | all pass | 100 |
+| Structured Output | 4 / 1 / 0 | 90.0 |
+| Hallucinated Tools | 3 / 1 / 0 | 87.5 |
+| Instruction Following | 4 / 0 / 1 | 80.0 |
+| Omitted Required Parameter | 3 / 0 / 1 | 75.0 |
+| Format Compliance | 3 / 1 / 1 | 70.0 |
+| Safety & Boundaries | 4 / 0 / 2 | 66.7 |
+| Ambiguity Handling | 1 / 3 / 0 | 62.5 |
+| Refusal Calibration | 1 / 0 / 4 | 20.0 |
+
+Most of the lost points are refusal calibration: it refused three benign or educational requests and wrote code for one malicious one. Tool mechanics (parameters, chains, error recovery, context) were clean. For reference, DeepSeek-V4.1-Flash-1017 scored 97.1 on the same harness on the same four Sparks ([its repo](https://github.com/tonyd2wild/DeepSeek-V4.1-Flash-TP2-and-TP4-DGX-Sparks)).
 
 ## Gotchas
 

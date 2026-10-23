@@ -1,0 +1,54 @@
+{
+ "chat": {
+  "ok": true,
+  "info": {
+   "content": "323",
+   "reasoning_chars": 14,
+   "usage": {
+    "prompt_tokens": 205,
+    "total_tokens": 217,
+    "completion_tokens": 12,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 8
+    }
+   },
+   "s": 0.95
+  }
+ },
+ "tool_call_roundtrip": {
+  "ok": true,
+  "info": {
+   "call": {
+    "name": "get_weather",
+    "arguments": "{\"city\": \"Nashville\"}"
+   },
+   "final": "The weather in Nashville right now is **71\u00b0F with clear skies** \u2014 a pleasant, sunny afternoon.",
+   "s": 2.9
+  }
+ },
+ "image_input": {
+  "ok": true,
+  "info": {
+   "content": "A white and blue Nike sneaker (Air Force 1 Foamposite) being held in a person's hand.",
+   "usage": {
+    "prompt_tokens": 1500,
+    "total_tokens": 1553,
+    "completion_tokens": 53,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 28
+    }
+   },
+   "s": 2.98
+  }
+ },
+ "prompt_32k_needle": {
+  "ok": true,
+  "info": {
+   "content": "MANGO-4471",
+   "prompt_tokens": 25782,
+   "s": 20.45
+  }
+ }
+}
