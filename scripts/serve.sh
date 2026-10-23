@@ -16,7 +16,7 @@ read -ra N <<< "$NODES"; read -ra M <<< "${MODES:-image image image image}"
 HEAD_HOST=${N[0]#*@}
 on() { ssh -o BatchMode=yes -o ConnectTimeout=15 "$1" "$2"; }
 PASS=$(for v in HEAD_IP MASTER_PORT API_PORT MODEL_DIR MODEL_NFS SERVED_NAME IMAGE OVERLAY_BASE OVERLAY_NFS NET_IF HCA \
-              GID_INDEX IB_ADDR_RANGE GMU MAXLEN MAXSEQS MAXBATCH SPEC NCCL_DEBUG; do printf "%s=%q " "$v" "${!v:-}"; done)
+              GID_INDEX IB_ADDR_RANGE GMU MAXLEN MAXSEQS MAXBATCH SPEC NCCL_DEBUG EXTRA_ENV; do printf "%s=%q " "$v" "${!v:-}"; done)
 
 case ${1:?start|stop|status|logs} in
   start)

@@ -40,6 +40,7 @@ ENVS=(
   NCCL_DEBUG=${NCCL_DEBUG:-WARN}
 )
 [ -n "$IB_ADDR_RANGE" ] && ENVS+=(NCCL_IB_ADDR_RANGE=$IB_ADDR_RANGE)
+[ -n "${EXTRA_ENV:-}" ] && read -ra XE <<< "$EXTRA_ENV" && ENVS+=("${XE[@]}")   # extra VAR=value words
 ARGS=(
   serve /models/MiniMax-M3.1-Flash --served-model-name "$SERVED_NAME" --trust-remote-code
   --tensor-parallel-size 4 --distributed-executor-backend mp

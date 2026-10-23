@@ -1,0 +1,54 @@
+{
+ "chat": {
+  "ok": true,
+  "info": {
+   "content": "323",
+   "reasoning_chars": 14,
+   "usage": {
+    "prompt_tokens": 205,
+    "total_tokens": 217,
+    "completion_tokens": 12,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 8
+    }
+   },
+   "s": 0.93
+  }
+ },
+ "tool_call_roundtrip": {
+  "ok": true,
+  "info": {
+   "call": {
+    "name": "get_weather",
+    "arguments": "{\"city\": \"Nashville\", \"unit\": \"f\"}"
+   },
+   "final": "Here's the current weather in Nashville:\n\n- **Temperature:** 71\u00b0F (~22\u00b0C)\n- **Sky:** Clear\n\nNice and clear in Nashville right now! Let me know if you'd like the",
+   "s": 5.79
+  }
+ },
+ "image_input": {
+  "ok": true,
+  "info": {
+   "content": "A blue and white Nike sneaker held in a person's hand.",
+   "usage": {
+    "prompt_tokens": 1500,
+    "total_tokens": 1539,
+    "completion_tokens": 39,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 23
+    }
+   },
+   "s": 4.03
+  }
+ },
+ "prompt_32k_needle": {
+  "ok": true,
+  "info": {
+   "content": "MANGO-4471",
+   "prompt_tokens": 25782,
+   "s": 48.17
+  }
+ }
+}

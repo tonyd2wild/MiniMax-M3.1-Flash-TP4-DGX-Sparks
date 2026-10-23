@@ -43,6 +43,8 @@ The model ships NVFP4 routed experts, MXFP8 attention and dense layers, and Mini
 
 So the GB10 numbers here are a baseline. Native FP4 MoE and MSA kernels for sm_121 would be the next speedups.
 
+**Why the experts run weight-only (W4A16) on GB10, and what we tried.** GB10 has FP4 tensor cores, but MiniMax-M3.1's quantization-aware-trained experts expect **per-token** FP4 activation scales. In this build only the SM100 MoE kernels implement that. The FP4 x FP4 backends that run on the sm_120 family (FlashInfer CUTLASS, vLLM CUTLASS) take a single global activation scale, so vLLM skips them and falls back to Marlin. We also forced vLLM's b12x backend (`--kernel-config '{"moe_backend":"b12x"}'` with `VLLM_B12X_MOE_FP4_FORCE_A16=1`). It loads the weights and then stops with `ValueError: Per-token NVFP4 activation scales are not supported by B12X.` For now Marlin it is. A per-token-scale FP4 MoE kernel for sm_12x is what would unlock the FP4 tensor cores here.
+
 ## Layout
 
 ```
@@ -64,9 +66,11 @@ Loading reads about 60 GB per rank. Over NFS on the 200G fabric that took 193 to
 2. **Export it over NFS** to the fabric subnet (`/etc/exports`: `/var/tmp/models 192.168.192.0/24(rw,sync,no_root_squash,no_subtree_check,insecure)`, then `sudo exportfs -ra`). The other nodes do not mount anything; `node_run.sh` creates a docker NFS volume.
 3. **Pull the image on every node**: `docker pull vllm/vllm-openai:minimax-m31-flash-arm64-cu134` (11.5 GB download, about 28 GB on disk). If a node has no room, see [overlay mode](#a-node-without-disk-for-the-image).
 4. **Configure**: `cp configs/config.env.example configs/config.env` and set `NODES` (rank 0 first), `HEAD_IP`, `MODEL_DIR`/`MODEL_NFS`, `NET_IF`, `HCA` and `GID_INDEX` for your fabric.
-5. **Start**: `scripts/serve.sh start`. It starts a memory guard on every node, drops the page cache, starts the four ranks and waits for `/v1/models`. First boot about 7 minutes: weights about 3.5 minutes, then KV sizing, torch.compile and CUDA graphs.
+5. **Start**: `scripts/serve.sh start` (tested end to end on our four Sparks: it came up with a KV pool of 1,426,663 tokens, 4.76x at 300K, and passed the smoke tests, [`results/smoke_repo_serve.json`](results/smoke_repo_serve.json); the profile-based KV size moves by about 1% between boots). It starts a memory guard on every node, drops the page cache, starts the four ranks and waits for `/v1/models`. First boot about 7 minutes: weights about 3.5 minutes, then KV sizing, torch.compile and CUDA graphs.
 6. **Check**: `python3 scripts/smoke.py http://<head>:8003 minimax-m3.1-flash <some.jpg> <some-text-file>` (chat, tool call, image, ~32K needle), then `python3 scripts/speed_bench.py --base http://<head>:8003 --model minimax-m3.1-flash --corpus <dir with .py files> --out results.json`.
 7. **Stop**: `scripts/serve.sh stop`. `scripts/serve.sh status` shows each node's MemAvailable and the guard's lowest reading.
+
+Extra vLLM flags or container env for one start: `EXTRA_ARGS="--some-flag value" EXTRA_ENV="VAR=value" scripts/serve.sh start` (a later `--kernel-config` overrides the default one).
 
 ### The serve command
 
@@ -171,7 +175,7 @@ Most of the lost points are refusal calibration: it refused three benign or educ
 
 1. **The CUDA 13.4 image on a CUDA 13.0 driver.** The image's vLLM is built with CUDA 13.4; the GB10 driver is 580 (CUDA 13.0). In image mode the NVIDIA container toolkit loads the image's forward-compat `libcuda` (615.71) and everything works. If a container ends up on the host `libcuda` instead (our overlay mode did), the Marlin NVFP4 repack fails at load with `cudaErrorUnsupportedPtxVersion` ("the provided PTX was compiled with an unsupported toolchain"). Fix: put `/usr/local/cuda-13.4/compat` first in `LD_LIBRARY_PATH` (`node_run.sh` does). Check with `cuDriverGetVersion`: it must say 13040.
 2. **FlashInfer autotune.** With autotune on, the MXFP8 GEMM tuning ran over 25 minutes on GB10 (more than 218 shape tunings, all ranks in lockstep) and needs extra memory while it runs. `--kernel-config '{"enable_flashinfer_autotune":false}'` skips it; boots then take about 7 minutes.
-3. **Memory headroom**, above. Rank 0 needs the most. The first long prompt also JIT-compiles a few kernels (`_prepare_dflash_inputs_kernel`, CuTeDSL `MXFP8QuantizeSwizzledKernel`); the compile cache lands in the mounted `/root/.cache`, so later boots skip it.
+3. **Memory headroom**, above. Rank 0 needs the most. The first requests after every boot also JIT-compile a few kernels (`_prepare_dflash_inputs_kernel`, CuTeDSL `MXFP8QuantizeSwizzledKernel`), which costs memory on rank 0 and time: our 25.8K-token needle prompt took 44 to 48 s as the first long prompt after a boot and 20.5 s warm. Send a warm-up request (one short, one ~8K) after `serve.sh start`.
 4. **`--block-size 128` is mandatory** for the sparse index cache, and the hybrid KV cache manager has to be off (`--disable-hybrid-kv-cache-manager`), as in vLLM's recipe.
 5. **Drop the page cache before loading.** A GB10 with a full page cache stalls while 60 GB of weights stream in; `serve.sh start` drops it (needs passwordless `sudo` for `tee /proc/sys/vm/drop_caches`; skip otherwise).
 6. **No Ray needed.** vLLM's mp backend spans nodes with `--nnodes/--node-rank/--master-addr` and `--headless` on the workers.
