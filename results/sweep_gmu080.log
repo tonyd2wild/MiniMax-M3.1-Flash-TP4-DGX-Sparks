@@ -1,0 +1,24 @@
+short C1: ok 1/1 prompt 238 TTFT p50 0.52s prefill agg 460 tok/s decode/stream 22.2 agg decode 22.3 total 41 tok/s accept 0.363 len 2.09 
+short C2: ok 2/2 prompt 237 TTFT p50 0.49s prefill agg 958 tok/s decode/stream 21.4 agg decode 40.7 total 75 tok/s accept 0.426 len 2.28 
+short C3: ok 3/3 prompt 238 TTFT p50 0.59s prefill agg 1218 tok/s decode/stream 16.9 agg decode 48.8 total 91 tok/s accept 0.379 len 2.14 
+short C4: ok 4/4 prompt 236 TTFT p50 0.68s prefill agg 1393 tok/s decode/stream 16.9 agg decode 65.9 total 122 tok/s accept 0.420 len 2.26 
+short C5: ok 5/5 prompt 236 TTFT p50 1.33s prefill agg 885 tok/s decode/stream 13.2 agg decode 61.9 total 117 tok/s accept 0.372 len 2.12 
+short C6: ok 6/6 prompt 238 TTFT p50 1.22s prefill agg 1169 tok/s decode/stream 16.0 agg decode 84.2 total 159 tok/s accept 0.398 len 2.19 
+   8k C1: ok 1/1 prompt 10315 TTFT p50 10.77s prefill agg 958 tok/s decode/stream 22.8 agg decode 22.9 total 482 tok/s accept 0.584 len 2.75 
+   8k C2: ok 2/2 prompt 7768 TTFT p50 7.93s prefill agg 1499 tok/s decode/stream 21.6 agg decode 34.0 total 781 tok/s accept 0.733 len 3.20 
+   8k C3: ok 3/3 prompt 7203 TTFT p50 27.73s prefill agg 677 tok/s decode/stream 15.2 agg decode 24.1 total 505 tok/s accept 0.581 len 2.74 
+   8k C4: ok 4/4 prompt 7444 TTFT p50 13.34s prefill agg 1488 tok/s decode/stream 13.4 agg decode 36.4 total 942 tok/s accept 0.649 len 2.95 
+   8k C5: ok 5/5 prompt 7623 TTFT p50 15.85s prefill agg 1491 tok/s decode/stream 11.5 agg decode 38.8 total 1018 tok/s accept 0.653 len 2.96 
+   8k C6: ok 6/6 prompt 7722 TTFT p50 24.39s prefill agg 1494 tok/s decode/stream 12.1 agg decode 36.4 total 1069 tok/s accept 0.585 len 2.75 
+  32k C1: ok 1/1 prompt 27452 TTFT p50 18.13s prefill agg 1514 tok/s decode/stream 33.2 agg decode 33.3 total 1073 tok/s accept 0.728 len 3.19 
+  32k C2: ok 2/2 prompt 31635 TTFT p50 35.06s prefill agg 1480 tok/s decode/stream 20.4 agg decode 20.7 total 1223 tok/s accept 0.740 len 3.22 
+  32k C3: ok 3/3 prompt 29828 TTFT p50 43.73s prefill agg 1495 tok/s decode/stream 9.4 agg decode 15.6 total 1278 tok/s accept 0.731 len 3.19 
+  32k C4: ok 4/4 prompt 34890 TTFT p50 60.30s prefill agg 1492 tok/s decode/stream 6.1 agg decode 13.0 total 1306 tok/s accept 0.575 len 2.72 
+  32k C5: ok 5/5 prompt 29877 TTFT p50 60.21s prefill agg 1494 tok/s decode/stream 5.1 agg decode 14.3 total 1344 tok/s accept 0.711 len 3.13 
+  32k C6: ok 6/6 prompt 27794 TTFT p50 68.40s prefill agg 1496 tok/s decode/stream 4.8 agg decode 14.9 total 1355 tok/s accept 0.703 len 3.11 
+ 100k C1: ok 1/1 prompt 97259 TTFT p50 65.96s prefill agg 1474 tok/s decode/stream 31.0 agg decode 31.1 total 1314 tok/s accept 0.687 len 3.06 
+ 100k C2: ok 2/2 prompt 112398 TTFT p50 117.91s prefill agg 1476 tok/s decode/stream 12.9 agg decode 6.4 total 1373 tok/s accept 0.482 len 2.44 
+ 100k C3: ok 3/3 prompt 98544 TTFT p50 137.36s prefill agg 1444 tok/s decode/stream 3.4 agg decode 5.3 total 1369 tok/s accept 0.640 len 2.92 
+ 100k C4: ok 4/4 prompt 98416 TTFT p50 183.07s prefill agg 1476 tok/s decode/stream 2.9 agg decode 4.9 total 1420 tok/s accept 0.680 len 3.04 
+ 100k C5: ok 5/5 prompt 103030 TTFT p50 216.43s prefill agg 1476 tok/s decode/stream 1.8 agg decode 4.5 total 1429 tok/s accept 0.644 len 2.93 
+ 100k C6: ok 6/6 prompt 90084 TTFT p50 221.46s prefill agg 1477 tok/s decode/stream 1.6 agg decode 4.7 total 1434 tok/s accept 0.681 len 3.04 

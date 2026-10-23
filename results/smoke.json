@@ -1,0 +1,54 @@
+{
+ "chat": {
+  "ok": true,
+  "info": {
+   "content": "323",
+   "reasoning_chars": 14,
+   "usage": {
+    "prompt_tokens": 205,
+    "total_tokens": 217,
+    "completion_tokens": 12,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 8
+    }
+   },
+   "s": 1.13
+  }
+ },
+ "tool_call_roundtrip": {
+  "ok": true,
+  "info": {
+   "call": {
+    "name": "get_weather",
+    "arguments": "{\"city\": \"Nashville\", \"unit\": \"f\"}"
+   },
+   "final": "Right now in Nashville it's **71\u00b0F and clear skies** \u2014 a pleasant afternoon. Let me know if you'd like the temperature in Celsius instead, or a forecast for lat",
+   "s": 5.13
+  }
+ },
+ "image_input": {
+  "ok": true,
+  "info": {
+   "content": "A blue and white patent leather sneaker (Air Jordan 11) being held in a hand.",
+   "usage": {
+    "prompt_tokens": 1500,
+    "total_tokens": 1542,
+    "completion_tokens": 42,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+     "reasoning_tokens": 19
+    }
+   },
+   "s": 4.48
+  }
+ },
+ "prompt_32k_needle": {
+  "ok": true,
+  "info": {
+   "content": "MANGO-4471",
+   "prompt_tokens": 25782,
+   "s": 44.56
+  }
+ }
+}

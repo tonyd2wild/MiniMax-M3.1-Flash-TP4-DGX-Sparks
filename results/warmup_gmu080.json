@@ -1,0 +1,87 @@
+{
+ "label": "warmup",
+ "base": "http://127.0.0.1:8003",
+ "model": "minimax-m3.1-flash",
+ "max_tokens": 256,
+ "extra": {},
+ "started": "2026-10-23T13:24:45+0000",
+ "cells": [
+  {
+   "size": "8k",
+   "conc": 1,
+   "n_ok": 1,
+   "n_err": 0,
+   "wall_s": 19.784956693649292,
+   "errors": [],
+   "requests": [
+    {
+     "ok": true,
+     "prompt_tokens": 7488,
+     "completion_tokens": 256,
+     "ttft": 10.274314880371094,
+     "total": 19.784523248672485,
+     "t_start": 1792761886.7055109,
+     "t_first": 1792761896.9798257,
+     "t_end": 1792761906.490034,
+     "prefill_tps": 728.8077197542094,
+     "decode_tps": 26.8134788365187
+    }
+   ],
+   "prompt_tokens_med": 7488,
+   "ttft_p50": 10.274314880371094,
+   "ttft_max": 10.274314880371094,
+   "prefill_tps_c1": 728.8077197542094,
+   "prefill_tps_agg": 728.7923976202442,
+   "decode_tps_per_stream_p50": 26.8134788365187,
+   "decode_tps_agg": 26.918442802292027,
+   "total_tps": 391.4084887780281,
+   "gen_tps_wall": 12.93912359596787,
+   "dspark": {
+    "draft_tokens": 225.0,
+    "accepted": 182.0,
+    "drafts": 75.0,
+    "acceptance_rate": 0.8088888888888889,
+    "mean_accepted_len": 3.4266666666666667
+   }
+  },
+  {
+   "size": "32k",
+   "conc": 1,
+   "n_ok": 1,
+   "n_err": 0,
+   "wall_s": 37.86505961418152,
+   "errors": [],
+   "requests": [
+    {
+     "ok": true,
+     "prompt_tokens": 32219,
+     "completion_tokens": 256,
+     "ttft": 28.427406072616577,
+     "total": 37.852439880371094,
+     "t_start": 1792761906.507114,
+     "t_first": 1792761934.93452,
+     "t_end": 1792761944.3595538,
+     "prefill_tps": 1133.3781182038897,
+     "decode_tps": 27.056564756700574
+    }
+   ],
+   "prompt_tokens_med": 32219,
+   "ttft_p50": 28.427406072616577,
+   "ttft_max": 28.427406072616577,
+   "prefill_tps_c1": 1133.3781182038897,
+   "prefill_tps_agg": 1133.373916762155,
+   "decode_tps_per_stream_p50": 27.056564756700574,
+   "decode_tps_agg": 27.16170628368188,
+   "total_tps": 857.6508351207563,
+   "gen_tps_wall": 6.760850309189025,
+   "dspark": {
+    "draft_tokens": 297.0,
+    "accepted": 156.0,
+    "drafts": 99.0,
+    "acceptance_rate": 0.5252525252525253,
+    "mean_accepted_len": 2.5757575757575757
+   }
+  }
+ ],
+ "finished": "2026-10-23T13:25:44+0000"
+}
